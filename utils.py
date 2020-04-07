@@ -44,29 +44,33 @@ def get_all_data_loaders(conf):
     if 'new_size' in conf:
         new_size_a = new_size_b = conf['new_size']
     else:
-        new_size_a = conf['new_size_a']
-        new_size_b = conf['new_size_b']
-    height = conf['crop_image_height']
-    width = conf['crop_image_width']
+        new_size_a = conf.get('new_size_a', None)
+        new_size_b = conf.get('new_size_b', None)
+    height = conf.get('crop_image_height', None)
+    width = conf.get('crop_image_width', None)
+    if (width is None) or (height is None):
+        do_crop = False
+    else:
+        do_crop = True
 
     if 'data_root' in conf:
         train_loader_a = get_data_loader_folder(os.path.join(conf['data_root'], 'trainA'), batch_size, True,
-                                              new_size_a, height, width, num_workers, True)
+                                              new_size_a, height, width, num_workers, do_crop)
         test_loader_a = get_data_loader_folder(os.path.join(conf['data_root'], 'testA'), batch_size, False,
-                                             new_size_a, new_size_a, new_size_a, num_workers, True)
+                                             new_size_a, new_size_a, new_size_a, num_workers, do_crop)
         train_loader_b = get_data_loader_folder(os.path.join(conf['data_root'], 'trainB'), batch_size, True,
-                                              new_size_b, height, width, num_workers, True)
+                                              new_size_b, height, width, num_workers, do_crop)
         test_loader_b = get_data_loader_folder(os.path.join(conf['data_root'], 'testB'), batch_size, False,
-                                             new_size_b, new_size_b, new_size_b, num_workers, True)
+                                             new_size_b, new_size_b, new_size_b, num_workers, do_crop)
     else:
         train_loader_a = get_data_loader_list(conf['data_folder_train_a'], conf['data_list_train_a'], batch_size, True,
-                                                new_size_a, height, width, num_workers, True)
+                                                new_size_a, height, width, num_workers, do_crop)
         test_loader_a = get_data_loader_list(conf['data_folder_test_a'], conf['data_list_test_a'], batch_size, False,
-                                                new_size_a, new_size_a, new_size_a, num_workers, True)
+                                                new_size_a, new_size_a, new_size_a, num_workers, do_crop)
         train_loader_b = get_data_loader_list(conf['data_folder_train_b'], conf['data_list_train_b'], batch_size, True,
-                                                new_size_b, height, width, num_workers, True)
+                                                new_size_b, height, width, num_workers, do_crop)
         test_loader_b = get_data_loader_list(conf['data_folder_test_b'], conf['data_list_test_b'], batch_size, False,
-                                                new_size_b, new_size_b, new_size_b, num_workers, True)
+                                                new_size_b, new_size_b, new_size_b, num_workers, do_crop)
     return train_loader_a, train_loader_b, test_loader_a, test_loader_b
 
 
