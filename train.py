@@ -57,6 +57,8 @@ shutil.copy(opts.config, os.path.join(output_directory, 'config.yaml')) # copy c
 iterations = trainer.resume(checkpoint_directory, hyperparameters=config) if opts.resume else 0
 while True:
     for it, (images_a, images_b) in enumerate(zip(train_loader_a, train_loader_b)):
+        if (images_a.mean(axis=(1, 2, 3)) > 0.9999).any() or (images_b.mean(axis=(1, 2, 3)) > 0.9999).any():
+            continue
         trainer.update_learning_rate()
         images_a, images_b = images_a.cuda().detach(), images_b.cuda().detach()
 
