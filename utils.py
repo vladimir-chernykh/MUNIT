@@ -231,7 +231,14 @@ def load_vgg16(model_dir):
             os.system('wget https://www.dropbox.com/s/76l3rt4kyi3s8x7/vgg16.t7?dl=1 -O ' + os.path.join(model_dir, 'vgg16.t7'))
         vgglua = load_lua(os.path.join(model_dir, 'vgg16.t7'))
         vgg = Vgg16()
-        for (src, dst) in zip(vgglua.parameters()[0], vgg.parameters()):
+        vgglua_params = []
+        for i in range(len(vgglua._obj[b'modules'])):
+            temp = vgglua._obj[b'modules'][i]._obj
+            if b'weight' in temp:
+                vgglua_params.append(torch.tensor(temp[b'weight']))
+            if b'bias' in temp:
+                vgglua_params.append(torch.tensor(temp[b'bias']))
+        for (src, dst) in zip(vgglua_params, vgg.parameters()):
             dst.data[:] = src
         torch.save(vgg.state_dict(), os.path.join(model_dir, 'vgg16.weight'))
     vgg = Vgg16()
