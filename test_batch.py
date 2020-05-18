@@ -3,14 +3,14 @@ Copyright (C) 2018 NVIDIA Corporation.  All rights reserved.
 Licensed under the CC BY-NC-SA 4.0 license (https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode).
 """
 from __future__ import print_function
-from utils import get_config, get_data_loader_folder, pytorch03_to_pytorch04, load_inception
-from trainer import MUNIT_Trainer, UNIT_Trainer
+from .utils import get_config, get_data_loader_folder, pytorch03_to_pytorch04, load_inception
+from .trainer import MUNIT_Trainer, UNIT_Trainer
 from torch import nn
 from scipy.stats import entropy
 import torch.nn.functional as F
 import argparse
 from torch.autograd import Variable
-from data import ImageFolder
+from .data import ImageFolder
 import numpy as np
 import torchvision.utils as vutils
 try:
